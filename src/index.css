@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 .text-h1 {
-  font-size: 38px;
+  font-size: 37px;
 }
 
 .text-h2 {
-  font-size: 23px;
+  font-size: 22px;
 }
 
 .text-default {
-  font-size: 18px;
+  font-size: 17px;
 }
 
 html {

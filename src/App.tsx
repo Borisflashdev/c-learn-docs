@@ -1,11 +1,16 @@
+import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
 import { Home } from './pages/Home'
 import { Guide } from './pages/Guide'
 import { About } from './pages/About'
 import { NotFound } from './pages/NotFound'
+import { useTheme } from './context/ThemeContext'
 
 function App() {
+  const { color } = useTheme()
+  const [isHovered, setIsHovered] = useState(false)
+
   return (
     <div className="flex min-h-screen flex-col bg-black text-gray-100">
       <Navbar />
@@ -25,7 +30,13 @@ function App() {
             href="https://mail.google.com/mail/u/0/#inbox?compose=CrpPbDzFDtRXTfHPrqKQmFJwWrtCWsRXJmShrCrWVLdWVbKpWbJZPVVkfBThznwwxBQRGSglMnKsCWzXjRSB"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#00d4ff] hover:underline transition-colors"
+            className="transition-colors"
+            style={{
+              color: isHovered ? color : undefined,
+              textDecoration: isHovered ? 'underline' : 'none',
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
             borismirkovic11 [at] gmail [dot] com
           </a>

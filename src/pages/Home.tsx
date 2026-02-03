@@ -1,5 +1,18 @@
 import { useNavigate } from 'react-router-dom'
-import logo from '../assets/logo.png'
+import { useTheme } from '../context/ThemeContext'
+import logo1 from '../assets/logo.png'
+import logo2 from '../assets/logo2.png'
+import logo3 from '../assets/logo3.png'
+import logo4 from '../assets/logo4.png'
+import logo5 from '../assets/logo5.png'
+
+const logos: Record<string, string> = {
+  'logo.png': logo1,
+  'logo2.png': logo2,
+  'logo3.png': logo3,
+  'logo4.png': logo4,
+  'logo5.png': logo5,
+}
 
 const features = [
   {
@@ -30,25 +43,22 @@ const features = [
 
 export function Home() {
   const navigate = useNavigate()
+  const { color, logo } = useTheme()
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
-      <h1 className="font-mono text-h1 text-[#00d4ff]">
+      <h1 className="font-mono text-h1" style={{ color }}>
         C Learn - Machine Learning Framework in C
       </h1>
 
       <div className="mt-8 flex flex-col-reverse items-center justify-between gap-8 md:flex-row">
         <div className="flex-1 font-mono text-default text-white/70">
           <p>
-            C Learn is a lightweight, high-performance machine learning framework built entirely in pure C.
-            Designed for developers who need speed, simplicity, and full control over their ML pipelines.
-          </p>
-          <p className="mt-4">
-            No external dependencies. No bloat. Just clean, efficient code that runs anywhere C runs.
+            C Learn is an open-source machine learning framework designed for learning and exploring ML concepts in depth. Written in pure C, it emphasizes transparency, performance, and understanding how algorithms work at a low level. Clean, efficient, and built to make machine learning more approachable.
           </p>
         </div>
         <div className="flex-shrink-0">
-          <img src={logo} alt="C Learn Logo" className="h-32 w-32" />
+          <img src={logos[logo]} alt="C Learn Logo" className="h-32 w-32" />
         </div>
       </div>
 
@@ -58,7 +68,7 @@ export function Home() {
             key={feature.name}
             className="flex flex-col border border-white p-6"
           >
-            <h2 className="font-mono text-h2 text-[#00d4ff]">{feature.name}</h2>
+            <h2 className="font-mono text-h2" style={{ color }}>{feature.name}</h2>
             <p className="mt-3 flex-1 font-mono text-default text-white/70">
               {feature.description}
             </p>
@@ -67,7 +77,7 @@ export function Home() {
               className="group mt-6 w-fit cursor-pointer border border-white px-4 py-2 font-mono text-default text-white transition-all duration-300 hover:bg-white hover:text-black"
             >
               <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
-                <span className="text-[#00d4ff] group-hover:text-black">{'>'}</span> Learn More
+                <span style={{ color }} className="group-hover:text-black">{'>'}</span> learn_more
               </span>
               <span className="ml-1 inline-block opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 _

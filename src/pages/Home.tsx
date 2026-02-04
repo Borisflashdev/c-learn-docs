@@ -16,28 +16,34 @@ const logos: Record<string, string> = {
 
 const features = [
   {
-    name: 'Vector',
+    name: 'vector',
     description: 'Efficient vector operations for mathematical computations and data manipulation.',
+    link: '/guide/vector',
   },
   {
-    name: 'Matrix',
+    name: 'matrix',
     description: 'Powerful matrix operations optimized for performance and memory usage.',
+    link: '/guide/matrix',
   },
   {
-    name: 'Scaling',
+    name: 'scaling',
     description: 'Data normalization and scaling functions to prepare your datasets for training.',
+    link: '/guide/scaling',
   },
   {
-    name: 'Linear Regression',
+    name: 'regression',
     description: 'Build and train linear regression models for predictive analysis.',
+    link: '/guide/regression',
   },
   {
-    name: 'Classification',
+    name: 'classification',
     description: 'Classification algorithms to categorize and predict discrete outcomes.',
+    link: '/guide',
   },
   {
-    name: 'Neural Networks',
+    name: 'neural_networks',
     description: 'Build and train neural networks from scratch with customizable layers and activation functions.',
+    link: '/guide',
   },
 ]
 
@@ -51,10 +57,11 @@ export function Home() {
         C Learn - Machine Learning Framework in C
       </h1>
 
-      <div className="mt-8 flex flex-col-reverse items-center justify-between gap-8 md:flex-row">
+      <h2 className="mt-8 font-mono text-h2 text-white/90">$ cat description.txt</h2>
+      <div className="mt-4 flex flex-col-reverse items-center justify-between gap-8 rounded border border-white bg-black/40 p-6 md:flex-row">
         <div className="flex-1 font-mono text-default text-white/70">
           <p>
-            C Learn is an open-source machine learning framework designed for learning and exploring ML concepts in depth. Written in pure C, it emphasizes transparency, performance, and understanding how algorithms work at a low level. Clean, efficient, and built to make machine learning more approachable.
+            <span style={{ color }}>&gt;</span> C Learn is an open-source machine learning framework designed for learning and exploring ML concepts in depth. Written in pure C, it emphasizes transparency, performance, and understanding how algorithms work at a low level. Clean, efficient, and built to make machine learning more approachable.
           </p>
         </div>
         <div className="flex-shrink-0">
@@ -66,14 +73,14 @@ export function Home() {
         {features.map((feature) => (
           <div
             key={feature.name}
-            className="flex flex-col border border-white p-6"
+            className="flex flex-col rounded border border-white bg-black/40 p-6"
           >
             <h2 className="font-mono text-h2" style={{ color }}>{feature.name}</h2>
             <p className="mt-3 flex-1 font-mono text-default text-white/70">
-              {feature.description}
+              <span style={{ color }}>&gt;</span> {feature.description}
             </p>
             <button
-              onClick={() => navigate('/guide')}
+              onClick={() => navigate(feature.link)}
               className="group mt-6 w-fit cursor-pointer border border-white px-4 py-2 font-mono text-default text-white transition-all duration-300 hover:bg-white hover:text-black"
             >
               <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme, themes } from '../context/ThemeContext'
 
 const navLinks = [
   { id: 'home', label: 'home', path: '/home' },
@@ -20,8 +20,9 @@ export function Navbar() {
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMoreOpen, setIsMoreOpen] = useState(false)
+  const [isThemeOpen, setIsThemeOpen] = useState(false)
   const navRef = useRef<HTMLElement>(null)
-  const { color } = useTheme()
+  const { theme, setTheme, color } = useTheme()
 
   useEffect(() => {
     setIsMenuOpen(false)
@@ -32,6 +33,7 @@ export function Navbar() {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
         setIsMenuOpen(false)
         setIsMoreOpen(false)
+        setIsThemeOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -98,6 +100,26 @@ export function Navbar() {
               </div>
             ))}
           </div>
+          {/* Mobile theme selector */}
+          <div className="border-t border-white/20 mt-2 pt-2">
+            <div className="px-4 py-2 font-mono text-default text-white/50">theme</div>
+            {Object.entries(themes).map(([key, value]) => (
+              <div
+                key={key}
+                onClick={() => {
+                  setTheme(key as keyof typeof themes)
+                }}
+                className={`flex items-center gap-2 px-4 py-2 font-mono text-default cursor-pointer transition-colors
+                  ${theme === key ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
+              >
+                <span
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: value.color }}
+                />
+                <span>{value.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -161,6 +183,50 @@ export function Navbar() {
                   className="flex items-center gap-2 px-4 py-2 font-mono text-default cursor-pointer transition-colors text-white/70 hover:text-white hover:bg-white/5"
                 >
                   <span>{link.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Theme selector dropdown */}
+        <div
+          onClick={() => setIsThemeOpen(!isThemeOpen)}
+          className="relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer border-r bg-black text-white/50 hover:text-white border-b border-b-white"
+        >
+          <span
+            className="w-3 h-3 rounded-full mr-2"
+            style={{ backgroundColor: color }}
+          />
+          <span>theme</span>
+          <svg className="ml-1 h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+          <span
+            className="ml-10 text-white/50 hover:text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            ×
+          </span>
+
+          {isThemeOpen && (
+            <div className="absolute left-0 top-full mt-0 bg-black border border-white menu-slide min-w-[150px] z-50">
+              {Object.entries(themes).map(([key, value]) => (
+                <div
+                  key={key}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setTheme(key as keyof typeof themes)
+                    setIsThemeOpen(false)
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 font-mono text-default cursor-pointer transition-colors
+                    ${theme === key ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
+                >
+                  <span
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: value.color }}
+                  />
+                  <span>{value.name}</span>
                 </div>
               ))}
             </div>

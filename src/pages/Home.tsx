@@ -1,18 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
-import logo1 from '../assets/logo.png'
-import logo2 from '../assets/logo2.png'
-import logo3 from '../assets/logo3.png'
-import logo4 from '../assets/logo4.png'
-import logo5 from '../assets/logo5.png'
-
-const logos: Record<string, string> = {
-  'logo.png': logo1,
-  'logo2.png': logo2,
-  'logo3.png': logo3,
-  'logo4.png': logo4,
-  'logo5.png': logo5,
-}
+import logoMain from '../assets/logo_main.png'
 
 const features = [
   {
@@ -49,7 +37,7 @@ const features = [
 
 export function Home() {
   const navigate = useNavigate()
-  const { color, logo } = useTheme()
+  const { color } = useTheme()
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -65,7 +53,7 @@ export function Home() {
           </p>
         </div>
         <div className="flex-shrink-0">
-          <img src={logos[logo]} alt="C Learn Logo" className="h-32 w-32" />
+          <img src={logoMain} alt="C Learn Logo" className="h-32 w-32" />
         </div>
       </div>
 

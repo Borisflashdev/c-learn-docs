@@ -295,7 +295,7 @@ export function Guide() {
             <Route index element={<Navigate to="/guide/getting_started" replace />} />
             <Route path="getting_started" element={<GettingStarted />} />
             <Route path="vector/*" element={<Vector />} />
-            <Route path="matrix" element={<Matrix />} />
+            <Route path="matrix/*" element={<Matrix />} />
             <Route path="scaling" element={<Scaling />} />
             <Route path="regression" element={<Regression />} />
           </Routes>

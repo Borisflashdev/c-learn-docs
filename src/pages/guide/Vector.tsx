@@ -18,26 +18,7 @@ function FuncLink({ name, color }: { name: string; color: string }) {
   )
 }
 
-function VectorOverview({ color }: { color: string }) {
-  return (
-    <div>
-      <h1 className="font-mono text-h1" style={{ color }}>
-        vector
-      </h1>
-      <p className="mt-4 font-mono text-default text-white/70">
-        <span style={{ color }}>&gt;</span> The Vector module provides efficient operations for
-        working with mathematical vectors in C Learn.
-      </p>
-      <p className="mt-4 font-mono text-default text-white/70">
-        <span style={{ color }}>&gt;</span> Select a topic from the navigation on the left to
-        learn more about vector operations.
-      </p>
-    </div>
-  )
-}
-
-function VectorStructure({ color }: { color: string }) {
-  const vectorHeader = `#ifndef VECTOR_H
+const vectorHeader = `#ifndef VECTOR_H
 #define VECTOR_H
 
 #include "../errors/errors.h"
@@ -72,10 +53,44 @@ void vector_apply(Vector *x, double (*func)(double));
 
 #endif`
 
+function VectorOverview({ color }: { color: string }) {
   return (
     <div>
       <h1 className="font-mono text-h1" style={{ color }}>
-        Vector Structure
+        vector
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat overview.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The <span style={{ color }}>Vector</span> module provides
+            efficient operations for working with mathematical vectors in C Learn.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> A vector is stored as a dynamically allocated array of doubles
+            with its dimension tracked separately.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat vector.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{vectorHeader}</code>
+          </pre>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function VectorStructure({ color }: { color: string }) {
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        vector_structure
       </h1>
 
       <section className="mt-8">
@@ -99,7 +114,41 @@ void vector_apply(Vector *x, double (*func)(double));
             <span style={{ color }}>&gt;</span> Vectors support operations such as: addition,
             subtraction, scalar multiplication, dot product, and more.
           </p>
-        </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> A vector is defined by three key properties:
+          </p>
+          <ul className="mt-4 space-y-3 pl-6 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Magnitude</span> — the length or size of the vector, always a non-negative scalar value
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Direction</span> — indicates which way the vector points (e.g., from A to B vs from B to A)
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Line of Action</span> — the line along which the vector lies in space
+            </li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The <span style={{ color }}>magnitude</span> (or norm) of a vector is calculated using the Euclidean formula:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>||v||</span> = √(v₁² + v₂² + v₃² + ... + vₙ²)
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> For a 2D vector <span style={{ color }}>v = [3, 4]</span>:
+          </p>
+          <div className="mt-2 pl-6 font-mono text-default text-white/70">
+            <span style={{ color }}>||v||</span> = √(3² + 4²) = √(9 + 16) = √25 = <span style={{ color }}>5</span>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Canonical Position</span> — a vector is in canonical (standard) position when its
+            starting point (tail) is placed at the origin (0, 0). This is the standard representation used in most calculations.
+          </p>
+
+                  </div>
       </section>
 
       <section className="mt-12">
@@ -108,21 +157,21 @@ void vector_apply(Vector *x, double (*func)(double));
           <p className="font-mono text-default leading-relaxed text-white/70">
             <span style={{ color }}>&gt;</span> In machine learning, vectors are a <span style={{ color }}>fundamental data structure</span>:
           </p>
-          <ul className="mt-4 space-y-3 font-mono text-default text-white/70">
+          <ul className="mt-4 space-y-3 pl-6 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> <span style={{ color }}>Feature vectors</span> — each data point
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Feature vectors</span> — each data point
               (e.g., image, text, user) is represented as a vector of numerical values
             </li>
             <li>
-              <span style={{ color }}>•</span> <span style={{ color }}>Weights</span> — weights in neural
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Weights</span> — weights in neural
               networks are vectors that get optimized during training
             </li>
             <li>
-              <span style={{ color }}>•</span> <span style={{ color }}>Gradients</span> — gradients used
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Gradients</span> — gradients used
               in optimization are also vectors
             </li>
             <li>
-              <span style={{ color }}>•</span> <span style={{ color }}>Embeddings</span> — words, images and other
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Embeddings</span> — words, images and other
               objects are mapped into vector space
             </li>
           </ul>
@@ -331,9 +380,9 @@ function VectorCreate({ color }: { color: string }) {
           <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
             <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>NULL</span> if:
           </p>
-          <ul className="mt-2 space-y-2 font-mono text-default text-white/70">
-            <li><span style={{ color }}>•</span> dim &lt; 1 (invalid dimension)</li>
-            <li><span style={{ color }}>•</span> Memory allocation fails</li>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> dim &lt; 1 (invalid dimension)</li>
+            <li><span style={{ color }}>{'>'}</span> Memory allocation fails</li>
           </ul>
         </div>
       </section>
@@ -379,13 +428,13 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Always check if the returned pointer is <span style={{ color }}>NULL</span> before using the vector.
+              <span style={{ color }}>{'>'}</span> Always check if the returned pointer is <span style={{ color }}>NULL</span> before using the vector.
             </li>
             <li>
-              <span style={{ color }}>•</span> The caller is responsible for freeing the memory using <FuncLink name="vector_free" color={color} />.
+              <span style={{ color }}>{'>'}</span> The caller is responsible for freeing the memory using <FuncLink name="vector_free" color={color} />.
             </li>
             <li>
-              <span style={{ color }}>•</span> Uses <span style={{ color }}>calloc</span> instead of malloc to ensure all elements are zero-initialized.
+              <span style={{ color }}>{'>'}</span> Uses <span style={{ color }}>calloc</span> instead of malloc to ensure all elements are zero-initialized.
             </li>
           </ul>
         </div>
@@ -471,9 +520,9 @@ function VectorCopy({ color }: { color: string }) {
           <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
             <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>NULL</span> if:
           </p>
-          <ul className="mt-2 space-y-2 font-mono text-default text-white/70">
-            <li><span style={{ color }}>•</span> Source vector x is NULL</li>
-            <li><span style={{ color }}>•</span> Memory allocation fails</li>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Source vector x is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Memory allocation fails</li>
           </ul>
         </div>
       </section>
@@ -521,10 +570,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Both the original and the copy must be freed separately using <FuncLink name="vector_free" color={color} />.
+              <span style={{ color }}>{'>'}</span> Both the original and the copy must be freed separately using <FuncLink name="vector_free" color={color} />.
             </li>
             <li>
-              <span style={{ color }}>•</span> Internally uses <FuncLink name="vector_create" color={color} /> to allocate the new vector.
+              <span style={{ color }}>{'>'}</span> Internally uses <FuncLink name="vector_create" color={color} /> to allocate the new vector.
             </li>
           </ul>
         </div>
@@ -629,13 +678,13 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Passing NULL will trigger an error message but won't crash.
+              <span style={{ color }}>{'>'}</span> Passing NULL will trigger an error message but won't crash.
             </li>
             <li>
-              <span style={{ color }}>•</span> After freeing, set the pointer to NULL to avoid use-after-free bugs.
+              <span style={{ color }}>{'>'}</span> After freeing, set the pointer to NULL to avoid use-after-free bugs.
             </li>
             <li>
-              <span style={{ color }}>•</span> Must be called for every vector created with <FuncLink name="vector_create" color={color} /> or <FuncLink name="vector_copy" color={color} />.
+              <span style={{ color }}>{'>'}</span> Must be called for every vector created with <FuncLink name="vector_create" color={color} /> or <FuncLink name="vector_copy" color={color} />.
             </li>
           </ul>
         </div>
@@ -718,9 +767,9 @@ function VectorGet({ color }: { color: string }) {
           <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
             <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if:
           </p>
-          <ul className="mt-2 space-y-2 font-mono text-default text-white/70">
-            <li><span style={{ color }}>•</span> Vector x is NULL</li>
-            <li><span style={{ color }}>•</span> Index is out of bounds (i &lt; 0 or i &gt;= dim)</li>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Vector x is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Index is out of bounds (i &lt; 0 or i &gt;= dim)</li>
           </ul>
         </div>
       </section>
@@ -868,10 +917,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Use <FuncLink name="vector_get" color={color} /> to retrieve values.
+              <span style={{ color }}>{'>'}</span> Use <FuncLink name="vector_get" color={color} /> to retrieve values.
             </li>
             <li>
-              <span style={{ color }}>•</span> Index bounds are checked before setting.
+              <span style={{ color }}>{'>'}</span> Index bounds are checked before setting.
             </li>
           </ul>
         </div>
@@ -993,10 +1042,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> For large vectors, consider using <FuncLink name="vector_print_head" color={color} /> or <FuncLink name="vector_print_tail" color={color} />.
+              <span style={{ color }}>{'>'}</span> For large vectors, consider using <FuncLink name="vector_print_head" color={color} /> or <FuncLink name="vector_print_tail" color={color} />.
             </li>
             <li>
-              <span style={{ color }}>•</span> Output format: [val1, val2, ..., valN]
+              <span style={{ color }}>{'>'}</span> Output format: [val1, val2, ..., valN]
             </li>
           </ul>
         </div>
@@ -1117,10 +1166,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> See also <FuncLink name="vector_print_tail" color={color} /> for printing the last N elements.
+              <span style={{ color }}>{'>'}</span> See also <FuncLink name="vector_print_tail" color={color} /> for printing the last N elements.
             </li>
             <li>
-              <span style={{ color }}>•</span> If num equals dim, no "..." is shown.
+              <span style={{ color }}>{'>'}</span> If num equals dim, no "..." is shown.
             </li>
           </ul>
         </div>
@@ -1239,10 +1288,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> See also <FuncLink name="vector_print_head" color={color} /> for printing the first N elements.
+              <span style={{ color }}>{'>'}</span> See also <FuncLink name="vector_print_head" color={color} /> for printing the first N elements.
             </li>
             <li>
-              <span style={{ color }}>•</span> If num equals dim, no "..." prefix is shown.
+              <span style={{ color }}>{'>'}</span> If num equals dim, no "..." prefix is shown.
             </li>
           </ul>
         </div>
@@ -1336,6 +1385,77 @@ function VectorArithmetic({ color }: { color: string }) {
       </section>
 
       <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Addition (+)</span> — element-wise sum of two vectors:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a + b</span> = [a₁ + b₁, a₂ + b₂, ..., aₙ + bₙ]
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>[1, 2, 3] + [4, 5, 6] = [5, 7, 9]</span>
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Triangle Rule</span> — to add two vectors geometrically,
+            place the tail of the second vector at the head of the first. The resultant vector goes from the tail of the first to the head of the second.
+          </p>
+          <div className="mt-2 pl-6 font-mono text-default text-white/70">
+            A → B → C : vector AC = vector AB + vector BC
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Parallelogram Rule</span> — place both vectors at the same origin point.
+            Complete the parallelogram. The diagonal from the origin represents the sum of the two vectors.
+          </p>
+          <div className="mt-2 pl-6 font-mono text-default text-white/70">
+            Vectors a and b from origin O → diagonal OC = a + b
+          </div>
+
+          <p className="mt-8 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Subtraction (-)</span> — element-wise difference of two vectors:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a - b</span> = [a₁ - b₁, a₂ - b₂, ..., aₙ - bₙ]
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>[5, 7, 9] - [4, 5, 6] = [1, 2, 3]</span>
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Geometrically, <span style={{ color }}>a - b</span> is equivalent to <span style={{ color }}>a + (-b)</span>,
+            where -b is vector b with reversed direction.
+          </p>
+
+          <p className="mt-8 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Multiplication (*)</span> — element-wise product (Hadamard product):
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a * b</span> = [a₁ × b₁, a₂ × b₂, ..., aₙ × bₙ]
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>[2, 3, 4] * [5, 6, 7] = [10, 18, 28]</span>
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Note: This is NOT the dot product. It multiplies corresponding elements.
+          </p>
+
+          <p className="mt-8 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Division (/)</span> — element-wise division:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a / b</span> = [a₁ / b₁, a₂ / b₂, ..., aₙ / bₙ]
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>[10, 18, 28] / [5, 6, 7] = [2, 3, 4]</span>
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Warning: Division by zero will return 0 for that element with a warning.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
         <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
         <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
           <table className="w-full font-mono text-default">
@@ -1423,13 +1543,13 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Division by zero sets the result to 0 with a warning.
+              <span style={{ color }}>{'>'}</span> Division by zero sets the result to 0 with a warning.
             </li>
             <li>
-              <span style={{ color }}>•</span> The result vector must be freed using <FuncLink name="vector_free" color={color} />.
+              <span style={{ color }}>{'>'}</span> The result vector must be freed using <FuncLink name="vector_free" color={color} />.
             </li>
             <li>
-              <span style={{ color }}>•</span> For scalar operations, use <FuncLink name="vector_scalar_arithmetic" color={color} />.
+              <span style={{ color }}>{'>'}</span> For scalar operations, use <FuncLink name="vector_scalar_arithmetic" color={color} />.
             </li>
           </ul>
         </div>
@@ -1496,6 +1616,74 @@ function VectorScalarArithmetic({ color }: { color: string }) {
           <p className="font-mono text-default leading-relaxed text-white/70">
             <span style={{ color }}>&gt;</span> Performs in-place arithmetic operations between a vector and a scalar value.
             Modifies the original vector.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Scalar multiplication multiplies each element of a vector by a scalar value:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>k × v</span> = [k × v₁, k × v₂, ..., k × vₙ]
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>3 × [2, 4, 6] = [6, 12, 18]</span>
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> How scalar multiplication affects vector properties:
+          </p>
+
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>When k {'>'} 0</span> (positive scalar):
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Magnitude — multiplied by k (vector gets longer if k {'>'} 1, shorter if 0 {'<'} k {'<'} 1)</li>
+            <li><span style={{ color }}>{'>'}</span> Direction — unchanged (same direction)</li>
+            <li><span style={{ color }}>{'>'}</span> Line of Action — unchanged (same line)</li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>When k {'<'} 0</span> (negative scalar):
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Magnitude — multiplied by |k| (absolute value)</li>
+            <li><span style={{ color }}>{'>'}</span> Direction — reversed (points opposite way)</li>
+            <li><span style={{ color }}>{'>'}</span> Line of Action — unchanged (same line)</li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>When k = 1</span> (identity):
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Magnitude — unchanged</li>
+            <li><span style={{ color }}>{'>'}</span> Direction — unchanged</li>
+            <li><span style={{ color }}>{'>'}</span> Line of Action — unchanged</li>
+          </ul>
+          <p className="mt-2 pl-6 font-mono text-default text-white/70">
+            The vector remains exactly the same: <span style={{ color }}>1 × v = v</span>
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>When k = 0</span> (zero scalar):
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Result is the <span style={{ color }}>zero vector</span>: [0, 0, ..., 0]</li>
+            <li><span style={{ color }}>{'>'}</span> Magnitude becomes 0</li>
+            <li><span style={{ color }}>{'>'}</span> Direction and Line of Action are undefined</li>
+          </ul>
+          <p className="mt-2 pl-6 font-mono text-default text-white/70">
+            Example: <span style={{ color }}>0 × [5, 10, 15] = [0, 0, 0]</span>
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>When k = -1</span>:
+          </p>
+          <p className="mt-2 pl-6 font-mono text-default text-white/70">
+            The vector is reversed: <span style={{ color }}>-1 × v = -v</span> (same magnitude, opposite direction)
           </p>
         </div>
       </section>
@@ -1572,13 +1760,13 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Modifies the vector <span style={{ color }}>in-place</span> (no new allocation).
+              <span style={{ color }}>{'>'}</span> Modifies the vector <span style={{ color }}>in-place</span> (no new allocation).
             </li>
             <li>
-              <span style={{ color }}>•</span> Division by zero is not allowed and will trigger an error.
+              <span style={{ color }}>{'>'}</span> Division by zero is not allowed and will trigger an error.
             </li>
             <li>
-              <span style={{ color }}>•</span> For vector-to-vector operations, use <FuncLink name="vector_arithmetic" color={color} />.
+              <span style={{ color }}>{'>'}</span> For vector-to-vector operations, use <FuncLink name="vector_arithmetic" color={color} />.
             </li>
           </ul>
         </div>
@@ -1663,7 +1851,7 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> See also <FuncLink name="vector_max" color={color} /> for finding the maximum.
+              <span style={{ color }}>{'>'}</span> See also <FuncLink name="vector_max" color={color} /> for finding the maximum.
             </li>
           </ul>
         </div>
@@ -1748,7 +1936,7 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> See also <FuncLink name="vector_min" color={color} /> for finding the minimum.
+              <span style={{ color }}>{'>'}</span> See also <FuncLink name="vector_min" color={color} /> for finding the minimum.
             </li>
           </ul>
         </div>
@@ -1832,7 +2020,7 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Used internally by <FuncLink name="vector_mean" color={color} />.
+              <span style={{ color }}>{'>'}</span> Used internally by <FuncLink name="vector_mean" color={color} />.
             </li>
           </ul>
         </div>
@@ -1915,10 +2103,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Internally uses <FuncLink name="vector_sum" color={color} />.
+              <span style={{ color }}>{'>'}</span> Internally uses <FuncLink name="vector_sum" color={color} />.
             </li>
             <li>
-              <span style={{ color }}>•</span> Used by <FuncLink name="vector_std" color={color} /> for standard deviation calculation.
+              <span style={{ color }}>{'>'}</span> Used by <FuncLink name="vector_std" color={color} /> for standard deviation calculation.
             </li>
           </ul>
         </div>
@@ -1980,9 +2168,9 @@ function VectorStd({ color }: { color: string }) {
             <span style={{ color }}>&gt;</span> The <span style={{ color }}>ddof</span> (Delta Degrees of Freedom)
             parameter controls the divisor:
           </p>
-          <ul className="mt-2 space-y-2 font-mono text-default text-white/70">
-            <li><span style={{ color }}>•</span> ddof = 0: Population std (divide by N)</li>
-            <li><span style={{ color }}>•</span> ddof = 1: Sample std (divide by N-1)</li>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> ddof = 0: Population std (divide by N)</li>
+            <li><span style={{ color }}>{'>'}</span> ddof = 1: Sample std (divide by N-1)</li>
           </ul>
         </div>
       </section>
@@ -2055,10 +2243,10 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Uses <FuncLink name="vector_mean" color={color} /> internally.
+              <span style={{ color }}>{'>'}</span> Uses <FuncLink name="vector_mean" color={color} /> internally.
             </li>
             <li>
-              <span style={{ color }}>•</span> For ML, sample std (ddof=1) is typically used.
+              <span style={{ color }}>{'>'}</span> For ML, sample std (ddof=1) is typically used.
             </li>
           </ul>
         </div>
@@ -2108,12 +2296,67 @@ function VectorDotProduct({ color }: { color: string }) {
             <span style={{ color }}>&gt;</span> Calculates the dot product (inner product) of two vectors.
           </p>
           <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
-            <span style={{ color }}>&gt;</span> Formula: x · y = Σ(xᵢ * yᵢ)
-          </p>
-          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
             <span style={{ color }}>&gt;</span> The dot product is fundamental in ML for computing similarities,
             projections, and neural network forward passes.
           </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The <span style={{ color }}>dot product</span> (also called inner product or scalar product)
+            multiplies corresponding elements and sums the results:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a · b</span> = a₁b₁ + a₂b₂ + ... + aₙbₙ = Σ(aᵢ × bᵢ)
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>[1, 2, 3] · [4, 5, 6]</span> = 1×4 + 2×5 + 3×6 = 4 + 10 + 18 = <span style={{ color }}>32</span>
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Geometric interpretation</span> — the dot product relates to the angle θ between vectors:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a · b</span> = ||a|| × ||b|| × cos(θ)
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Where ||a|| and ||b|| are the magnitudes of vectors a and b, and θ is the angle between them.
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Orthogonality</span> — two vectors are orthogonal (perpendicular) when their dot product equals zero:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a ⊥ b</span> ⟺ a · b = 0
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> This occurs because cos(90°) = 0, so ||a|| × ||b|| × cos(90°) = 0
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example: <span style={{ color }}>[1, 0] · [0, 1]</span> = 1×0 + 0×1 = <span style={{ color }}>0</span> (perpendicular vectors)
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Interpreting the dot product result:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>a · b {'>'} 0</span> — angle between vectors is acute (θ {'<'} 90°), vectors point in similar directions</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>a · b = 0</span> — vectors are orthogonal (θ = 90°), completely independent</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>a · b {'<'} 0</span> — angle between vectors is obtuse (θ {'>'} 90°), vectors point in opposite directions</li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Properties:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Commutative: a · b = b · a</li>
+            <li><span style={{ color }}>{'>'}</span> Distributive: a · (b + c) = a · b + a · c</li>
+            <li><span style={{ color }}>{'>'}</span> Scalar multiplication: (ka) · b = k(a · b)</li>
+            <li><span style={{ color }}>{'>'}</span> Self dot product: a · a = ||a||² (magnitude squared)</li>
+          </ul>
         </div>
       </section>
 
@@ -2301,13 +2544,13 @@ int main() {
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <ul className="space-y-3 font-mono text-default text-white/70">
             <li>
-              <span style={{ color }}>•</span> Modifies the vector <span style={{ color }}>in-place</span>.
+              <span style={{ color }}>{'>'}</span> Modifies the vector <span style={{ color }}>in-place</span>.
             </li>
             <li>
-              <span style={{ color }}>•</span> Works with any function matching the signature: double func(double)
+              <span style={{ color }}>{'>'}</span> Works with any function matching the signature: double func(double)
             </li>
             <li>
-              <span style={{ color }}>•</span> Common uses: activation functions (ReLU, sigmoid), math transforms (sqrt, exp, log)
+              <span style={{ color }}>{'>'}</span> Common uses: activation functions (ReLU, sigmoid), math transforms (sqrt, exp, log)
             </li>
           </ul>
         </div>

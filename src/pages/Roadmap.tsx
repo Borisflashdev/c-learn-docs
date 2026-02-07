@@ -1,18 +1,51 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+
+interface Commit {
+  date: string
+  type: string
+  message: string
+  url: string
+}
+
+function parseCommit(raw: { sha: string; commit: { message: string; author: { date: string } } }): Commit {
+  const line = raw.commit.message.split('\n')[0]
+  const match = line.match(/^(\w+)(?:\(.*?\))?:\s*(.*)/)
+  return {
+    date: raw.commit.author.date.split('T')[0],
+    type: match ? match[1].toLowerCase() : 'other',
+    message: match ? match[2] : line,
+    url: `https://github.com/Borisflashdev/c-learn/commit/${raw.sha}`,
+  }
+}
 
 export function Roadmap() {
   const { color } = useTheme()
+  const [commits, setCommits] = useState<Commit[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [filter, setFilter] = useState('all')
+  const [aboutHovered, setAboutHovered] = useState(false)
 
-  const devLogs = [
-    { date: '2025-07-15', version: 'v0.0.1', description: 'Initial repository created, project structure setup' },
-    { date: '2025-08-01', version: 'v0.0.2', description: 'Planning phase completed, core architecture designed' },
-    { date: '2025-09-15', version: 'v0.1.0', description: 'Basic memory management utilities implemented' },
-    { date: '2025-11-20', version: 'v0.2.0', description: 'Build system configured, CI/CD pipeline setup' },
-    { date: '2026-01-20', version: 'v0.3.0', description: 'Matrix implementation completed with SIMD optimizations' },
-    { date: '2026-01-24', version: 'v0.4.0', description: 'Vector operations library finished' },
-    { date: '2026-01-30', version: 'v0.5.0', description: 'Scaling and normalization functions added' },
-    { date: '2026-02-04', version: 'v0.6.0-dev', description: 'Linear regression in progress...' },
-  ]
+  useEffect(() => {
+    fetch('https://api.github.com/repos/Borisflashdev/c-learn/commits?per_page=100')
+      .then((res) => {
+        if (!res.ok) throw new Error(`GitHub API error: ${res.status}`)
+        return res.json()
+      })
+      .then((data) => {
+        setCommits(data.map(parseCommit))
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+        setLoading(false)
+      })
+  }, [])
+
+  const types = ['all', ...Array.from(new Set(commits.map((c) => c.type)))]
+  const filtered = filter === 'all' ? commits : commits.filter((c) => c.type === filter)
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -25,20 +58,22 @@ export function Roadmap() {
         <h2 className="font-mono text-h2 text-white/90">$ cat project_history.txt</h2>
         <div className="mt-4 rounded border border-white bg-black/40 p-6">
           <p className="font-mono text-default leading-relaxed text-white/70">
-            <span style={{ color }}>&gt;</span> C Learn development started in{' '}
-            <span style={{ color }}>mid-2025</span> with a simple goal: build a machine
-            learning framework in pure C that doesn't sacrifice performance for convenience.
+            <span style={{ color }}>&gt;</span> This page tracks the evolution of C Learn from
+            basic linear algebra to complex ML architectures. Every entry represents a concept implemented in pure C, byte-by-byte.
           </p>
           <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
-            <span style={{ color }}>&gt;</span> No external dependencies. No hidden abstractions.
-            Just raw, optimized C code that gives you full control over every byte of memory
-            and every CPU cycle.
-          </p>
-          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
-            <span style={{ color }}>&gt;</span> The project is actively maintained and new features
-            are being added regularly. Our focus is on creating a lightweight, embeddable ML
-            library suitable for systems programming, embedded devices, and performance-critical
-            applications.
+            <span style={{ color }}>&gt;</span> For a deeper dive into why I'm building this,
+            check out the{' '}
+            <Link
+              to="/about"
+              className="text-white underline transition-colors"
+              style={{ color: aboutHovered ? color : undefined }}
+              onMouseEnter={() => setAboutHovered(true)}
+              onMouseLeave={() => setAboutHovered(false)}
+            >
+              About
+            </Link>{' '}
+            page.
           </p>
         </div>
       </section>
@@ -50,35 +85,40 @@ export function Roadmap() {
           <pre className="font-mono text-sm leading-relaxed text-white/80">
             <code style={{ color: color + 'cc' }}>{`
   ╔═══════════════════════════════════════════════════════════════════════════════════════════════════════╗
-  ║                                    C LEARN DEVELOPMENT ROADMAP                                        ║
+  ║                                    C LEARN DEVELOPMENT ROADMAP                                      ║
   ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════╝
 
   2025                                                          2026
   ════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-       JUL              AUG-DEC                JAN 20            JAN 24            JAN 30           FEB
-        │                  │                     │                 │                 │               │
-        ▼                  ▼                     ▼                 ▼                 ▼               ▼
-   ┌─────────┐       ┌───────────┐        ┌───────────┐      ┌──────────┐     ┌──────────┐    ┌──────────┐
-   │ CREATED │       │ PLANNING  │        │  MATRIX   │      │  VECTOR  │     │ SCALING  │    │  LINEAR  │
-   │  REPO   │──────▶│   PHASE   │───────▶│   IMPL    │─────▶│   IMPL   │────▶│   OPS    │───▶│   REG    │
-   │  [✓]    │       │    [✓]    │        │    [✓]    │      │   [✓]    │     │   [✓]    │    │   [~]    │
-   └─────────┘       └───────────┘        └───────────┘      └──────────┘     └──────────┘    └──────────┘
-        │                  │                     │                 │                 │               │
-        └──────────────────┴─────────────────────┴─────────────────┴─────────────────┴───────────────┘
-                                                  │
-                                                  ▼
-                                         ┌───────────────┐
-                                         │   UPCOMING    │
-                                         └───────────────┘
-                                                  │
-              ┌───────────────────────────────────┼───────────────────────────────────┐
-              ▼                                   ▼                                   ▼
-       ┌─────────────┐                    ┌───────────────┐                   ┌───────────────┐
-       │   NEURAL    │                    │ OPTIMIZATION  │                   │     GPU       │
-       │  NETWORKS   │                    │  ALGORITHMS   │                   │   SUPPORT     │
-       │    [ ]      │                    │      [ ]      │                   │     [ ]       │
-       └─────────────┘                    └───────────────┘                   └───────────────┘
+       AUG              JAN 20           JAN 21-24          JAN 27           JAN 31          FEB 01-06
+        │                  │                 │                 │                │                │
+        ▼                  ▼                 ▼                 ▼                ▼                ▼
+   ┌─────────┐       ┌──────────┐     ┌───────────┐     ┌──────────┐    ┌──────────┐     ┌──────────┐
+   │  INIT   │       │   CSV    │     │  MATRIX   │     │ FEATURE  │    │  VECTOR  │     │  LINEAR  │
+   │  REPO   │──────▶│  PARSER  │────▶│   IMPL    │────▶│ SCALING  │───▶│   IMPL   │────▶│   REG    │
+   │  [✓]    │       │   [✓]   │     │    [✓]    │     │   [✓]    │    │   [✓]    │     │   [✓]    │
+   └─────────┘       └──────────┘     └───────────┘     └──────────┘    └──────────┘     └──────────┘
+        │                  │                 │                │               │                │
+        │                  │                 │                │               │                │
+        │    csv parsing   │  matrix ops,    │  min/max,      │  vector ops,  │  normal eq,    │
+        │    from file     │  slicing,       │  scaler,       │  const        │  batch GD,     │
+        │                  │  error handling │  inverse       │  correctness  │  stochastic GD │
+        │                  │                 │  transform     │               │                │
+        └──────────────────┴─────────────────┴────────────────┴───────────────┴────────────────┘
+                                                 │
+                                                 ▼
+                                        ┌───────────────┐
+                                        │   UPCOMING    │
+                                        └───────────────┘
+                                                 │
+             ┌───────────────────────────────────┼───────────────────────────────────┐
+             ▼                                   ▼                                   ▼
+      ┌─────────────┐                    ┌───────────────┐                   ┌───────────────┐
+      │   NEURAL    │                    │ OPTIMIZATION  │                   │     GPU       │
+      │  NETWORKS   │                    │  ALGORITHMS   │                   │   SUPPORT     │
+      │    [ ]      │                    │      [ ]      │                   │     [ ]       │
+      └─────────────┘                    └───────────────┘                   └───────────────┘
 
   ════════════════════════════════════════════════════════════════════════════════════════════════════════
   LEGEND:  [✓] Completed    [~] In Progress    [ ] Planned
@@ -90,36 +130,82 @@ export function Roadmap() {
 
       {/* Developer Logs Table */}
       <section className="mt-12">
-        <h2 className="font-mono text-h2 text-white/90">$ cat dev_logs.db</h2>
-        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
-          <table className="w-full font-mono text-default">
-            <thead>
-              <tr className="border-b border-white">
-                <th className="border-r border-white px-4 py-3 text-left text-white/90">DATE</th>
-                <th className="border-r border-white px-4 py-3 text-left text-white/90">VERSION</th>
-                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {devLogs.map((log, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-white transition-colors hover:bg-white/5"
+        <h2 className="font-mono text-h2 text-white/90">$ git log --oneline</h2>
+        {loading ? (
+          <p className="mt-4 px-4 py-6 font-mono text-default text-white/50">
+            <span style={{ color }}>$</span> Fetching commits...
+          </p>
+        ) : error ? (
+          <p className="mt-4 px-4 py-6 font-mono text-default text-red-400">
+            Error: {error}
+          </p>
+        ) : (
+          <>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {types.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setFilter(type)}
+                  className="cursor-pointer rounded border px-3 py-1 font-mono text-sm transition-colors"
+                  style={{
+                    borderColor: filter === type ? color : 'rgba(255,255,255,0.3)',
+                    backgroundColor: filter === type ? color + '20' : 'transparent',
+                    color: filter === type ? color : 'rgba(255,255,255,0.6)',
+                  }}
                 >
-                  <td className="border-r border-white px-4 py-3 text-white/60">{log.date}</td>
-                  <td className="border-r border-white px-4 py-3" style={{ color }}>
-                    {log.version}
-                  </td>
-                  <td className="px-4 py-3 text-white/70">{log.description}</td>
-                </tr>
+                  {type}
+                </button>
               ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-4 font-mono text-sm text-white/50">
-          <span style={{ color }}>$</span> Last updated: {new Date().toISOString().split('T')[0]} |
-          Total commits: 147 | Contributors: 3
-        </p>
+            </div>
+            <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+              <table className="w-full table-fixed font-mono text-default">
+                <colgroup>
+                  <col className="w-[130px]" />
+                  <col className="w-[110px]" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr className="border-b border-white">
+                    <th className="border-r border-white px-4 py-3 text-left text-white/90">DATE</th>
+                    <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                    <th className="px-4 py-3 text-left text-white/90">MESSAGE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((commit, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-white transition-colors hover:bg-white/5"
+                    >
+                      <td className="border-r border-white px-4 py-3 whitespace-nowrap text-white/60">
+                        {commit.date}
+                      </td>
+                      <td className="border-r border-white px-4 py-3" style={{ color }}>
+                        {commit.type}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className="relative z-10 inline-flex items-center cursor-pointer text-white/70 underline transition-colors"
+                          onMouseEnter={(e) => (e.currentTarget.style.color = color)}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+                          onClick={() => window.open(commit.url, '_blank', 'noopener,noreferrer')}
+                        >
+                          {commit.message}
+                          <svg className="ml-1.5 h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                          </svg>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 font-mono text-sm text-white/50">
+              <span style={{ color }}>$</span> Showing {filtered.length} of {commits.length} commits | Source: GitHub API
+            </p>
+          </>
+        )}
       </section>
     </div>
   )

@@ -6,10 +6,7 @@ function FuncLink({ name, color }: { name: string; color: string }) {
   const navigate = useNavigate()
   return (
     <span
-      onClick={() => {
-        navigate(`/guide/vector/${name}`)
-        window.scrollTo(0, 0)
-      }}
+      onClick={() => navigate(`/guide/vector/${name}`)}
       className="cursor-pointer underline transition-colors hover:opacity-70"
       style={{ color }}
     >

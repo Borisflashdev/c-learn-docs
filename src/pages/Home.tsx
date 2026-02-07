@@ -52,8 +52,17 @@ export function Home() {
             <span style={{ color }}>&gt;</span> C Learn is an open-source machine learning framework designed for learning and exploring ML concepts in depth. Written in pure C, it emphasizes transparency, performance, and understanding how algorithms work at a low level. Clean, efficient, and built to make machine learning more approachable.
           </p>
         </div>
-        <div className="flex-shrink-0">
-          <img src={logoMain} alt="C Learn Logo" className="h-32 w-32" />
+        <div
+          className="flex-shrink-0 select-none"
+          onContextMenu={(e) => e.preventDefault()}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <img
+            src={logoMain}
+            alt="C Learn Logo"
+            className="h-32 w-32 pointer-events-none"
+            draggable={false}
+          />
         </div>
       </div>
 

@@ -3,16 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTheme, themes } from '../context/ThemeContext'
 
 const navLinks = [
-  { id: 'home', label: 'home', path: '/home' },
-  { id: 'guide', label: 'user_guide', path: '/guide' },
-  { id: 'examples', label: 'examples', path: '/examples' },
-  { id: 'github', label: 'github', path: 'https://github.com/Borisflashdev/c-learn', external: true },
+  { id: 'home', label: 'Home', path: '/home' },
+  { id: 'guide', label: 'User Guide', path: '/guide' },
+  { id: 'examples', label: 'Examples', path: '/examples' },
+  { id: 'github', label: 'GitHub', path: 'https://github.com/Borisflashdev/c-learn', external: true },
 ]
 
 const moreLinks = [
-  { id: 'support', label: 'support', path: '/support' },
-  { id: 'roadmap', label: 'roadmap', path: '/roadmap' },
-  { id: 'about', label: 'about_me', path: '/about' },
+  { id: 'about', label: 'About', path: '/about' },
+  { id: 'roadmap', label: 'Roadmap', path: '/roadmap' },
 ]
 
 export function Navbar() {
@@ -76,7 +75,7 @@ export function Navbar() {
                   ${isActive ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
               >
                 <span style={{ color }}>{'>'}</span>
-                <span className="ml-2">{link.label.toLowerCase()}</span>
+                <span className="ml-2">{link.label}</span>
                 {'external' in link && link.external && (
                   <span className="ml-auto text-white/50 text-xs">[ext]</span>
                 )}
@@ -85,7 +84,7 @@ export function Navbar() {
           })}
           {/* Mobile: More links */}
           <div className="border-t border-white/20 mt-2 pt-2">
-            <div className="px-4 py-2 font-mono text-default text-white/50">more</div>
+            <div className="px-4 py-2 font-mono text-default text-white/50">More</div>
             {moreLinks.map((link) => (
               <div
                 key={link.id}
@@ -96,13 +95,13 @@ export function Navbar() {
                 className="flex items-center px-4 py-2 font-mono text-default cursor-pointer transition-colors text-white/70 hover:text-white hover:bg-white/5"
               >
                 <span style={{ color }}>{'>'}</span>
-                <span className="ml-2">{link.label.toLowerCase()}</span>
+                <span className="ml-2">{link.label}</span>
               </div>
             ))}
           </div>
           {/* Mobile theme selector */}
           <div className="border-t border-white/20 mt-2 pt-2">
-            <div className="px-4 py-2 font-mono text-default text-white/50">theme</div>
+            <div className="px-4 py-2 font-mono text-default text-white/50">Theme</div>
             {Object.entries(themes).map(([key, value]) => (
               <div
                 key={key}
@@ -159,7 +158,7 @@ export function Navbar() {
           onClick={() => setIsMoreOpen(!isMoreOpen)}
           className="relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer border-r bg-black text-white/50 hover:text-white border-b border-b-white"
         >
-          <span>more</span>
+          <span>More</span>
           <svg className="ml-1 h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M6 9l6 6 6-6" />
           </svg>
@@ -198,7 +197,7 @@ export function Navbar() {
             className="w-3 h-3 rounded-full mr-2"
             style={{ backgroundColor: color }}
           />
-          <span>theme</span>
+          <span>Theme</span>
           <svg className="ml-1 h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M6 9l6 6 6-6" />
           </svg>

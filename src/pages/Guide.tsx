@@ -100,13 +100,16 @@ const guideLinks = [
     ],
   },
   {
-    id: 'regression',
-    label: 'regression',
-    path: '/guide/regression',
+    id: 'linear_regression',
+    label: 'linear_regression',
+    path: '/guide/linear_regression',
     subLinks: [
-      { id: 'regression_1', label: 'regression_1', path: '/guide/regression_1' },
-      { id: 'regression_2', label: 'regression_2', path: '/guide/regression_2' },
-      { id: 'regression_3', label: 'regression_3', path: '/guide/regression_3' },
+      { id: 'structure', label: 'structure', path: '/guide/linear_regression/structure' },
+      { id: 'linear_regression_create', label: 'linear_regression_create', path: '/guide/linear_regression/linear_regression_create' },
+      { id: 'l2_ridge', label: 'l2_ridge', path: '/guide/linear_regression/l2_ridge' },
+      { id: 'linear_regression_free', label: 'linear_regression_free', path: '/guide/linear_regression/linear_regression_free' },
+      { id: 'linear_regression_fit', label: 'linear_regression_fit', path: '/guide/linear_regression/linear_regression_fit' },
+      { id: 'linear_regression_predict', label: 'linear_regression_predict', path: '/guide/linear_regression/linear_regression_predict' },
     ],
   },
 ]
@@ -296,8 +299,8 @@ export function Guide() {
             <Route path="getting_started" element={<GettingStarted />} />
             <Route path="vector/*" element={<Vector />} />
             <Route path="matrix/*" element={<Matrix />} />
-            <Route path="scaling" element={<Scaling />} />
-            <Route path="regression" element={<Regression />} />
+            <Route path="scaling/*" element={<Scaling />} />
+            <Route path="linear_regression/*" element={<Regression />} />
           </Routes>
 
           {/* Prev/Next navigation */}
@@ -305,10 +308,7 @@ export function Guide() {
             <div>
               {prev && (
                 <span
-                  onClick={() => {
-                    navigate(prev.path)
-                    window.scrollTo(0, 0)
-                  }}
+                  onClick={() => navigate(prev.path)}
                   className="cursor-pointer text-white/50 transition-colors"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = color
@@ -324,10 +324,7 @@ export function Guide() {
             <div>
               {next && (
                 <span
-                  onClick={() => {
-                    navigate(next.path)
-                    window.scrollTo(0, 0)
-                  }}
+                  onClick={() => navigate(next.path)}
                   className="cursor-pointer text-white/50 transition-colors"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = color

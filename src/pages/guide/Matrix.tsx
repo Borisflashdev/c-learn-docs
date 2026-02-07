@@ -6,10 +6,7 @@ function FuncLink({ name, color }: { name: string; color: string }) {
   const navigate = useNavigate()
   return (
     <span
-      onClick={() => {
-        navigate(`/guide/matrix/${name}`)
-        window.scrollTo(0, 0)
-      }}
+      onClick={() => navigate(`/guide/matrix/${name}`)}
       className="cursor-pointer underline transition-colors hover:opacity-70"
       style={{ color }}
     >
@@ -3132,6 +3129,2651 @@ int main() {
   )
 }
 
+function MatrixArithmetic({ color }: { color: string }) {
+  const implementation = `Matrix *matrix_arithmetic(const Matrix *A, const Matrix *B, const char op) {
+    if (!A || !B) {
+        NULL_MATRIX_ERROR();
+        return NULL;
+    }
+    if (A->cols != B->cols || A->rows != B->rows) {
+        CUSTOM_ERROR("Matrix dimensions must match");
+        return NULL;
+    }
+
+    Matrix* C = matrix_create(A->rows, A->cols);
+    if (!C) {
+        ALLOCATION_ERROR();
+        return NULL;
+    }
+
+    const int size = A->rows * A->cols;
+    switch (op) {
+        case '+':
+            for (int i = 0; i < size; i++)
+                C->data[i] = A->data[i] + B->data[i];
+            break;
+        case '-':
+            for (int i = 0; i < size; i++)
+                C->data[i] = A->data[i] - B->data[i];
+            break;
+        case '*':
+            for (int i = 0; i < size; i++)
+                C->data[i] = A->data[i] * B->data[i];
+            break;
+        case '/':
+            for (int i = 0; i < size; i++) {
+                if (B->data[i] == 0) {
+                    CUSTOM_WARNING("Division by zero detected at [%d,%d], set to 0", i / A->cols, i % A->cols);
+                    C->data[i] = 0;
+                } else {
+                    C->data[i] = A->data[i] / B->data[i];
+                }
+            }
+            break;
+        default:
+            CUSTOM_ERROR("Invalid operator");
+            matrix_free(C);
+            return NULL;
+    }
+    return C;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_arithmetic
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>Matrix *<span style={{ color }}>matrix_arithmetic</span>(const Matrix *A, const Matrix *B, char op);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Performs <span style={{ color }}>element-wise</span> arithmetic operations between two matrices.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Supports addition (+), subtraction (-), multiplication (*), and division (/).
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Both matrices must have identical dimensions.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Element-wise operations</span> (also called Hadamard operations) apply
+            an operation to corresponding elements of two matrices.
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`For matrices A and B of size m × n:
+
+(A ⊕ B)ᵢⱼ = Aᵢⱼ ⊕ Bᵢⱼ   where ⊕ ∈ {+, -, *, /}`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Element-wise Addition (A + B):</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`[ 1  2 ]   [ 5  6 ]   [ 1+5  2+6 ]   [ 6   8 ]
+[ 3  4 ] + [ 7  8 ] = [ 3+7  4+8 ] = [ 10  12 ]`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Element-wise Subtraction (A - B):</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`[ 5  6 ]   [ 1  2 ]   [ 5-1  6-2 ]   [ 4  4 ]
+[ 7  8 ] - [ 3  4 ] = [ 7-3  8-4 ] = [ 4  4 ]`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Hadamard Product (A ⊙ B):</span> Element-wise multiplication
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`[ 1  2 ]   [ 5  6 ]   [ 1×5  2×6 ]   [  5  12 ]
+[ 3  4 ] ⊙ [ 7  8 ] = [ 3×7  4×8 ] = [ 21  32 ]`}</pre>
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Note: This is different from standard matrix multiplication!
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Element-wise Division (A ⊘ B):</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`[ 10  20 ]   [ 2  4 ]   [ 10/2  20/4 ]   [ 5  5 ]
+[ 30  40 ] ⊘ [ 5  8 ] = [ 30/5  40/8 ] = [ 6  5 ]`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Properties:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Addition and multiplication are commutative: A + B = B + A, A ⊙ B = B ⊙ A</li>
+            <li><span style={{ color }}>{'>'}</span> Subtraction and division are not commutative</li>
+            <li><span style={{ color }}>{'>'}</span> All operations are associative with same operation type</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>A</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">First operand matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>B</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Second operand matrix. Must have same dimensions as A.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>op</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">char</td>
+                <td className="px-4 py-3 text-white/70">Operator: '+', '-', '*', or '/'.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns a new matrix containing the element-wise result.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>NULL</span> if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Either matrix is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Dimensions don't match</li>
+            <li><span style={{ color }}>{'>'}</span> Invalid operator provided</li>
+            <li><span style={{ color }}>{'>'}</span> Memory allocation fails</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_arithmetic.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *A = matrix_create(2, 2);
+    matrix_set(A, 0, 0, 1); matrix_set(A, 0, 1, 2);
+    matrix_set(A, 1, 0, 3); matrix_set(A, 1, 1, 4);
+
+    Matrix *B = matrix_create(2, 2);
+    matrix_set(B, 0, 0, 5); matrix_set(B, 0, 1, 6);
+    matrix_set(B, 1, 0, 7); matrix_set(B, 1, 1, 8);
+
+    // Element-wise addition
+    Matrix *sum = matrix_arithmetic(A, B, '+');
+    printf("A + B:\\n");
+    matrix_print(sum);
+    // [[6, 8]
+    //  [10, 12]]
+
+    // Element-wise multiplication (Hadamard product)
+    Matrix *hadamard = matrix_arithmetic(A, B, '*');
+    printf("A * B (element-wise):\\n");
+    matrix_print(hadamard);
+    // [[5, 12]
+    //  [21, 32]]
+
+    matrix_free(A);
+    matrix_free(B);
+    matrix_free(sum);
+    matrix_free(hadamard);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> For division, division by zero results in <span style={{ color }}>0</span> with a warning message.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> The '*' operator performs <span style={{ color }}>element-wise</span> multiplication, not matrix multiplication.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> For standard matrix multiplication, use <FuncLink name="matrix_multiplication" color={color} />.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Common in neural networks for gradient computations and activation masks.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixMultiplication({ color }: { color: string }) {
+  const implementation = `// TODO: try faster multiply (strassen? winograd)
+Matrix *matrix_multiplication(const Matrix *A, const Matrix *B) {
+    if (!A || !B) {
+        NULL_MATRIX_ERROR();
+        return NULL;
+    }
+    if (A->cols != B->rows) {
+        CUSTOM_ERROR("Incompatible dimensions for multiplication");
+        return NULL;
+    }
+
+    Matrix* C = matrix_create(A->rows, B->cols);
+    if (!C) {
+        ALLOCATION_ERROR();
+        return NULL;
+    }
+
+    const int m = A->rows;
+    const int n = A->cols;
+    const int p = B->cols;
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < p; j++) {
+            double sum = 0;
+            for (int k = 0; k < n; k++) {
+                sum += A->data[i * n + k] * B->data[k * p + j];
+            }
+            C->data[i * p + j] = sum;
+        }
+    }
+
+    return C;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_multiplication
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>Matrix *<span style={{ color }}>matrix_multiplication</span>(const Matrix *A, const Matrix *B);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Performs standard <span style={{ color }}>matrix multiplication</span> (dot product) of two matrices.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The number of columns in A must equal the number of rows in B.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Matrix multiplication</span> (also called matrix product or dot product)
+            combines two matrices to produce a third matrix.
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`If A is m × n and B is n × p, then C = A × B is m × p
+
+           n
+Cᵢⱼ = Σ  Aᵢₖ × Bₖⱼ
+          k=1`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Each element Cᵢⱼ is the <span style={{ color }}>dot product</span> of row i of A and column j of B:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`         [ b₁ⱼ ]
+[ aᵢ₁ aᵢ₂ ... aᵢₙ ] × [ b₂ⱼ ] = aᵢ₁×b₁ⱼ + aᵢ₂×b₂ⱼ + ... + aᵢₙ×bₙⱼ
+                       [ ... ]
+                       [ bₙⱼ ]`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`    [ 1  2 ]       [ 5  6 ]
+A = [ 3  4 ]   B = [ 7  8 ]
+
+C = A × B:
+
+C₁₁ = 1×5 + 2×7 = 5 + 14 = 19
+C₁₂ = 1×6 + 2×8 = 6 + 16 = 22
+C₂₁ = 3×5 + 4×7 = 15 + 28 = 43
+C₂₂ = 3×6 + 4×8 = 18 + 32 = 50
+
+    [ 19  22 ]
+C = [ 43  50 ]`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Properties:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>NOT commutative:</span> A × B ≠ B × A (in general)</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Associative:</span> (A × B) × C = A × (B × C)</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Distributive:</span> A × (B + C) = A × B + A × C</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Identity:</span> A × I = I × A = A</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Transpose:</span> (A × B)ᵀ = Bᵀ × Aᵀ</li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Dimension rule:</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            (m × <span style={{ color }}>n</span>) × (<span style={{ color }}>n</span> × p) = (m × p)
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The inner dimensions must match. The result has the outer dimensions.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>A</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Left matrix (m × n).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>B</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Right matrix (n × p). A.cols must equal B.rows.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns a new matrix of dimensions (A.rows × B.cols).
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>NULL</span> if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Either matrix is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Dimensions are incompatible (A.cols ≠ B.rows)</li>
+            <li><span style={{ color }}>{'>'}</span> Memory allocation fails</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_multiplication.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    // Create a 2x3 matrix A
+    Matrix *A = matrix_create(2, 3);
+    matrix_set(A, 0, 0, 1); matrix_set(A, 0, 1, 2); matrix_set(A, 0, 2, 3);
+    matrix_set(A, 1, 0, 4); matrix_set(A, 1, 1, 5); matrix_set(A, 1, 2, 6);
+
+    // Create a 3x2 matrix B
+    Matrix *B = matrix_create(3, 2);
+    matrix_set(B, 0, 0, 7);  matrix_set(B, 0, 1, 8);
+    matrix_set(B, 1, 0, 9);  matrix_set(B, 1, 1, 10);
+    matrix_set(B, 2, 0, 11); matrix_set(B, 2, 1, 12);
+
+    // Multiply: C = A × B (2x3 × 3x2 = 2x2)
+    Matrix *C = matrix_multiplication(A, B);
+
+    printf("A (2x3):\\n");
+    matrix_print(A);
+
+    printf("B (3x2):\\n");
+    matrix_print(B);
+
+    printf("C = A × B (2x2):\\n");
+    matrix_print(C);
+    // [[58, 64]
+    //  [139, 154]]
+    // C₁₁ = 1×7 + 2×9 + 3×11 = 7 + 18 + 33 = 58
+
+    matrix_free(A);
+    matrix_free(B);
+    matrix_free(C);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Uses the naive O(n³) algorithm. Future versions may implement Strassen or Winograd.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> For element-wise multiplication, use <FuncLink name="matrix_arithmetic" color={color} /> with '*'.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Essential for neural network forward/backward passes.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Used in linear regression: <span style={{ color }}>β = (XᵀX)⁻¹Xᵀy</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixScalarArithmetic({ color }: { color: string }) {
+  const implementation = `void matrix_scalar_arithmetic(Matrix *X, const double scalar, const char op) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return;
+    }
+
+    const int size = X->rows * X->cols;
+    switch (op) {
+        case '+':
+            for (int i = 0; i < size; i++)
+                X->data[i] += scalar;
+            break;
+        case '-':
+            for (int i = 0; i < size; i++)
+                X->data[i] -= scalar;
+            break;
+        case '*':
+            for (int i = 0; i < size; i++)
+                X->data[i] *= scalar;
+            break;
+        case '/':
+            if (scalar == 0) {
+                CUSTOM_ERROR("Division by zero is not allowed");
+                return;
+            }
+            for (int i = 0; i < size; i++)
+                X->data[i] /= scalar;
+            break;
+        default:
+            CUSTOM_ERROR("Invalid operator");
+    }
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_scalar_arithmetic
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>void <span style={{ color }}>matrix_scalar_arithmetic</span>(Matrix *X, double scalar, char op);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Performs <span style={{ color }}>in-place</span> arithmetic operation between a matrix and a scalar value.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Supports addition (+), subtraction (-), multiplication (*), and division (/).
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Modifies the matrix directly without creating a new one.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Scalar operations</span> apply a single value to every element of a matrix.
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`For matrix A and scalar k:
+
+(A ⊕ k)ᵢⱼ = Aᵢⱼ ⊕ k   where ⊕ ∈ {+, -, *, /}`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Scalar Addition:</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`[ 1  2 ]       [ 1+3  2+3 ]   [ 4  5 ]
+[ 3  4 ] + 3 = [ 3+3  4+3 ] = [ 6  7 ]`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Scalar Multiplication:</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`[ 1  2 ]       [ 1×2  2×2 ]   [ 2  4 ]
+[ 3  4 ] × 2 = [ 3×2  4×2 ] = [ 6  8 ]`}</pre>
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Also known as <span style={{ color }}>scalar multiplication</span> or scaling a matrix.
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Properties of scalar multiplication:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> k(A + B) = kA + kB (distributive over matrix addition)</li>
+            <li><span style={{ color }}>{'>'}</span> (k + m)A = kA + mA (distributive over scalar addition)</li>
+            <li><span style={{ color }}>{'>'}</span> k(mA) = (km)A (associative)</li>
+            <li><span style={{ color }}>{'>'}</span> 1 × A = A (identity)</li>
+            <li><span style={{ color }}>{'>'}</span> (kA)ᵀ = kAᵀ</li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Common uses in ML:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Learning rate scaling: W = W - α∇W</li>
+            <li><span style={{ color }}>{'>'}</span> Normalization: X = (X - μ) / σ</li>
+            <li><span style={{ color }}>{'>'}</span> Regularization scaling</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Matrix to modify (in-place).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>scalar</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">double</td>
+                <td className="px-4 py-3 text-white/70">The scalar value to apply.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>op</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">char</td>
+                <td className="px-4 py-3 text-white/70">Operator: '+', '-', '*', or '/'.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>void</span>. The matrix is modified in-place.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> No operation performed if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Matrix X is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Division by zero attempted</li>
+            <li><span style={{ color }}>{'>'}</span> Invalid operator provided</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_scalar_arithmetic.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(2, 2);
+    matrix_set(X, 0, 0, 1); matrix_set(X, 0, 1, 2);
+    matrix_set(X, 1, 0, 3); matrix_set(X, 1, 1, 4);
+
+    printf("Original:\\n");
+    matrix_print(X);
+
+    // Scale by 2
+    matrix_scalar_arithmetic(X, 2, '*');
+    printf("After × 2:\\n");
+    matrix_print(X);
+    // [[2, 4]
+    //  [6, 8]]
+
+    // Subtract 1 from all elements
+    matrix_scalar_arithmetic(X, 1, '-');
+    printf("After - 1:\\n");
+    matrix_print(X);
+    // [[1, 3]
+    //  [5, 7]]
+
+    // Divide by 2
+    matrix_scalar_arithmetic(X, 2, '/');
+    printf("After / 2:\\n");
+    matrix_print(X);
+    // [[0.5, 1.5]
+    //  [2.5, 3.5]]
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Operates <span style={{ color }}>in-place</span> — the original matrix is modified.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Division by zero is prevented with an error message.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Efficient for weight updates: <span style={{ color }}>W -= learning_rate * gradient</span>
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> For normalization, combine with <FuncLink name="matrix_col_mean" color={color} /> and <FuncLink name="matrix_col_std" color={color} />.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixMin({ color }: { color: string }) {
+  const implementation = `double matrix_min(const Matrix *X) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+
+    const int size = X->rows * X->cols;
+    double min = X->data[0];
+    for (int i = 1; i < size; i++) {
+        if (X->data[i] < min) {
+            min = X->data[i];
+        }
+    }
+
+    return min;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_min
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_min</span>(const Matrix *X);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Finds the <span style={{ color }}>minimum value</span> across all elements in the matrix.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the minimum value in the matrix.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_min.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(2, 3);
+    matrix_set(X, 0, 0, 5); matrix_set(X, 0, 1, 2); matrix_set(X, 0, 2, 8);
+    matrix_set(X, 1, 0, 1); matrix_set(X, 1, 1, 9); matrix_set(X, 1, 2, 3);
+
+    double min = matrix_min(X);
+    printf("Min: %f\\n", min);  // Output: 1.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Iterates through all elements in O(m×n) time.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for data normalization (min-max scaling).
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixMax({ color }: { color: string }) {
+  const implementation = `double matrix_max(const Matrix *X) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+
+    const int size = X->rows * X->cols;
+    double max = X->data[0];
+    for (int i = 1; i < size; i++) {
+        if (X->data[i] > max) {
+            max = X->data[i];
+        }
+    }
+
+    return max;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_max
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_max</span>(const Matrix *X);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Finds the <span style={{ color }}>maximum value</span> across all elements in the matrix.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the maximum value in the matrix.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_max.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(2, 3);
+    matrix_set(X, 0, 0, 5); matrix_set(X, 0, 1, 2); matrix_set(X, 0, 2, 8);
+    matrix_set(X, 1, 0, 1); matrix_set(X, 1, 1, 9); matrix_set(X, 1, 2, 3);
+
+    double max = matrix_max(X);
+    printf("Max: %f\\n", max);  // Output: 9.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Iterates through all elements in O(m×n) time.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for data normalization (min-max scaling).
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixSum({ color }: { color: string }) {
+  const implementation = `double matrix_sum(const Matrix *X) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+
+    double sum = 0;
+    const int size = X->rows * X->cols;
+    for (int i = 0; i < size; i++) {
+        sum += X->data[i];
+    }
+
+    return sum;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_sum
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_sum</span>(const Matrix *X);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Computes the <span style={{ color }}>sum</span> of all elements in the matrix.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the sum of all elements.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_sum.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(2, 3);
+    matrix_set(X, 0, 0, 1); matrix_set(X, 0, 1, 2); matrix_set(X, 0, 2, 3);
+    matrix_set(X, 1, 0, 4); matrix_set(X, 1, 1, 5); matrix_set(X, 1, 2, 6);
+
+    double sum = matrix_sum(X);
+    printf("Sum: %f\\n", sum);  // Output: 21.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Iterates through all elements in O(m×n) time.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for computing loss functions and aggregations.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixMean({ color }: { color: string }) {
+  const implementation = `double matrix_mean(const Matrix *X) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+
+    double sum = 0;
+    const int size = X->rows * X->cols;
+    for (int i = 0; i < size; i++) {
+        sum += X->data[i];
+    }
+
+    return sum / size;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_mean
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_mean</span>(const Matrix *X);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Computes the <span style={{ color }}>arithmetic mean</span> of all elements in the matrix.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the mean (sum / count) of all elements.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_mean.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(2, 3);
+    matrix_set(X, 0, 0, 1); matrix_set(X, 0, 1, 2); matrix_set(X, 0, 2, 3);
+    matrix_set(X, 1, 0, 4); matrix_set(X, 1, 1, 5); matrix_set(X, 1, 2, 6);
+
+    double mean = matrix_mean(X);
+    printf("Mean: %f\\n", mean);  // Output: 3.500000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Computes sum / (rows × cols).
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for centering data and computing MSE.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixColMin({ color }: { color: string }) {
+  const implementation = `double matrix_col_min(const Matrix *X, const int col) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+    if (col < 0 || col >= X->cols) {
+        INDEX_ERROR();
+        return 0;
+    }
+
+    const int n = X->rows;
+    const int stride = X->cols;
+    double min = X->data[col];
+    for (int i = 1; i < n; i++) {
+        const double val = X->data[i * stride + col];
+        if (val < min) min = val;
+    }
+
+    return min;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_col_min
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_col_min</span>(const Matrix *X, int col);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Finds the <span style={{ color }}>minimum value</span> in a specific column.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index (0-based).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the minimum value in the specified column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL or column index is out of bounds.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_col_min.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(3, 2);
+    matrix_set(X, 0, 0, 5); matrix_set(X, 0, 1, 2);
+    matrix_set(X, 1, 0, 1); matrix_set(X, 1, 1, 8);
+    matrix_set(X, 2, 0, 3); matrix_set(X, 2, 1, 4);
+
+    printf("Col 0 min: %f\\n", matrix_col_min(X, 0));  // Output: 1.000000
+    printf("Col 1 min: %f\\n", matrix_col_min(X, 1));  // Output: 2.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Iterates through column elements in O(m) time.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for per-feature normalization.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixColMax({ color }: { color: string }) {
+  const implementation = `double matrix_col_max(const Matrix *X, const int col) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+    if (col < 0 || col >= X->cols) {
+        INDEX_ERROR();
+        return 0;
+    }
+
+    const int n = X->rows;
+    const int stride = X->cols;
+    double max = X->data[col];
+    for (int i = 1; i < n; i++) {
+        const double val = X->data[i * stride + col];
+        if (val > max) max = val;
+    }
+
+    return max;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_col_max
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_col_max</span>(const Matrix *X, int col);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Finds the <span style={{ color }}>maximum value</span> in a specific column.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index (0-based).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the maximum value in the specified column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL or column index is out of bounds.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_col_max.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(3, 2);
+    matrix_set(X, 0, 0, 5); matrix_set(X, 0, 1, 2);
+    matrix_set(X, 1, 0, 1); matrix_set(X, 1, 1, 8);
+    matrix_set(X, 2, 0, 3); matrix_set(X, 2, 1, 4);
+
+    printf("Col 0 max: %f\\n", matrix_col_max(X, 0));  // Output: 5.000000
+    printf("Col 1 max: %f\\n", matrix_col_max(X, 1));  // Output: 8.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Iterates through column elements in O(m) time.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for per-feature normalization.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixColSum({ color }: { color: string }) {
+  const implementation = `double matrix_col_sum(const Matrix *X, const int col) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+    if (col < 0 || col >= X->cols) {
+        INDEX_ERROR();
+        return 0;
+    }
+
+    double sum = 0;
+    const int stride = X->cols;
+    for (int i = 0; i < X->rows; i++) {
+        sum += X->data[i * stride + col];
+    }
+
+    return sum;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_col_sum
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_col_sum</span>(const Matrix *X, int col);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Computes the <span style={{ color }}>sum</span> of all elements in a specific column.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index (0-based).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the sum of all elements in the specified column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL or column index is out of bounds.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_col_sum.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(3, 2);
+    matrix_set(X, 0, 0, 1); matrix_set(X, 0, 1, 2);
+    matrix_set(X, 1, 0, 3); matrix_set(X, 1, 1, 4);
+    matrix_set(X, 2, 0, 5); matrix_set(X, 2, 1, 6);
+
+    printf("Col 0 sum: %f\\n", matrix_col_sum(X, 0));  // Output: 9.000000
+    printf("Col 1 sum: %f\\n", matrix_col_sum(X, 1));  // Output: 12.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Iterates through column elements in O(m) time.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for computing feature totals.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixColMean({ color }: { color: string }) {
+  const implementation = `double matrix_col_mean(const Matrix *X, const int col) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+    if (col < 0 || col >= X->cols) {
+        INDEX_ERROR();
+        return 0;
+    }
+
+    double sum = 0;
+    const int stride = X->cols;
+    for (int i = 0; i < X->rows; i++) {
+        sum += X->data[i * stride + col];
+    }
+
+    return sum / X->rows;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_col_mean
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_col_mean</span>(const Matrix *X, int col);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Computes the <span style={{ color }}>arithmetic mean</span> of all elements in a specific column.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index (0-based).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the mean of all elements in the specified column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL or column index is out of bounds.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_col_mean.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(3, 2);
+    matrix_set(X, 0, 0, 1); matrix_set(X, 0, 1, 2);
+    matrix_set(X, 1, 0, 4); matrix_set(X, 1, 1, 5);
+    matrix_set(X, 2, 0, 7); matrix_set(X, 2, 1, 8);
+
+    printf("Col 0 mean: %f\\n", matrix_col_mean(X, 0));  // Output: 4.000000
+    printf("Col 1 mean: %f\\n", matrix_col_mean(X, 1));  // Output: 5.000000
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Computes sum / rows for the column.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Essential for feature-wise standardization.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixColStd({ color }: { color: string }) {
+  const implementation = `double matrix_col_std(const Matrix *X, const int col, const int ddof) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+    if (col < 0 || col >= X->cols) {
+        INDEX_ERROR();
+        return 0;
+    }
+    if (ddof != 0 && ddof != 1) {
+        CUSTOM_ERROR("Property 'ddof' must be 0 or 1");
+    }
+
+    const int n = X->rows;
+    const int stride = X->cols;
+    double mean = 0;
+
+    for (int i = 0; i < n; i++) {
+        mean += X->data[i * stride + col];
+    }
+    mean /= n;
+
+    double var = 0;
+    for (int i = 0; i < n; i++) {
+        const double diff = X->data[i * stride + col] - mean;
+        var += diff * diff;
+    }
+
+    if (ddof == 0) {
+        var /= n;
+    } else {
+        var /= n - 1;
+    }
+    return sqrt(var);
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_col_std
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_col_std</span>(const Matrix *X, int col, int ddof);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Computes the <span style={{ color }}>standard deviation</span> of all elements in a specific column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The <span style={{ color }}>ddof</span> parameter controls the divisor (n or n-1).
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index (0-based).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>ddof</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Delta degrees of freedom: 0 for population, 1 for sample.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the standard deviation of the specified column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if matrix is NULL or column index is out of bounds.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_col_std.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *X = matrix_create(4, 1);
+    matrix_set(X, 0, 0, 2);
+    matrix_set(X, 1, 0, 4);
+    matrix_set(X, 2, 0, 4);
+    matrix_set(X, 3, 0, 4);
+
+    // Population std (ddof=0): sqrt(((2-3.5)² + 3*(4-3.5)²) / 4)
+    printf("Population std: %f\\n", matrix_col_std(X, 0, 0));  // ~0.866
+
+    // Sample std (ddof=1): sqrt(((2-3.5)² + 3*(4-3.5)²) / 3)
+    printf("Sample std: %f\\n", matrix_col_std(X, 0, 1));  // 1.0
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>ddof=0</span>: Population standard deviation (divide by n).
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>ddof=1</span>: Sample standard deviation (divide by n-1, Bessel's correction).
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Essential for Z-score standardization.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixColDotProduct({ color }: { color: string }) {
+  const implementation = `double matrix_col_dot_product(const Matrix *A, const int col_A, const Matrix *B, const int col_B) {
+    if (!A || !B) {
+        NULL_MATRIX_ERROR();
+        return 0;
+    }
+    if (A->rows != B->rows) {
+        CUSTOM_ERROR("Row dimensions must match for dot product");
+        return 0;
+    }
+    if (col_A < 0 || col_A >= A->cols || col_B < 0 || col_B >= B->cols) {
+        INDEX_ERROR();
+        return 0;
+    }
+
+    double sum = 0;
+    const int n = A->rows;
+    const int stride_A = A->cols;
+    const int stride_B = B->cols;
+
+    for (int i = 0; i < n; i++) {
+        sum += A->data[i * stride_A + col_A] * B->data[i * stride_B + col_B];
+    }
+
+    return sum;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_col_dot_product
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>double <span style={{ color }}>matrix_col_dot_product</span>(const Matrix *A, int col_A, const Matrix *B, int col_B);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Computes the <span style={{ color }}>dot product</span> between a column of matrix A and a column of matrix B.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Both matrices must have the same number of rows.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat math_definition.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The <span style={{ color }}>dot product</span> (also called inner product or scalar product)
+            of two vectors is the sum of the products of their corresponding elements.
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`For column vectors a and b of length n:
+
+        n
+a · b = Σ  aᵢ × bᵢ = a₁b₁ + a₂b₂ + ... + aₙbₙ
+       i=1`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Example:
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <pre>{`    [ 1 ]       [ 4 ]
+a = [ 2 ]   b = [ 5 ]
+    [ 3 ]       [ 6 ]
+
+a · b = 1×4 + 2×5 + 3×6 = 4 + 10 + 18 = 32`}</pre>
+          </div>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Geometric interpretation:</span>
+          </p>
+          <div className="mt-4 rounded border border-white bg-black/60 p-4 font-mono text-default text-white/80">
+            <span style={{ color }}>a · b</span> = ||a|| × ||b|| × cos(θ)
+          </div>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Where θ is the angle between the vectors and ||·|| denotes the magnitude.
+          </p>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Properties:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Commutative:</span> a · b = b · a</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Distributive:</span> a · (b + c) = a · b + a · c</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Scalar multiplication:</span> (ka) · b = k(a · b)</li>
+            <li><span style={{ color }}>{'>'}</span> <span style={{ color }}>Self dot product:</span> a · a = ||a||² (squared magnitude)</li>
+          </ul>
+
+          <p className="mt-6 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> <span style={{ color }}>Applications in ML:</span>
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Cosine similarity: cos(θ) = (a · b) / (||a|| × ||b||)</li>
+            <li><span style={{ color }}>{'>'}</span> Linear regression coefficients</li>
+            <li><span style={{ color }}>{'>'}</span> Neural network weighted sums</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>A</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">First matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col_A</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index in A (0-based).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>B</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Second matrix. Must have same rows as A.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col_B</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index in B (0-based).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns the dot product of the two columns.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>0</span> if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Either matrix is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Row dimensions don't match</li>
+            <li><span style={{ color }}>{'>'}</span> Column index is out of bounds</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_col_dot_product.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+
+int main() {
+    Matrix *A = matrix_create(3, 2);
+    matrix_set(A, 0, 0, 1); matrix_set(A, 0, 1, 4);
+    matrix_set(A, 1, 0, 2); matrix_set(A, 1, 1, 5);
+    matrix_set(A, 2, 0, 3); matrix_set(A, 2, 1, 6);
+
+    Matrix *B = matrix_create(3, 1);
+    matrix_set(B, 0, 0, 7);
+    matrix_set(B, 1, 0, 8);
+    matrix_set(B, 2, 0, 9);
+
+    // Dot product of A[:,0] and B[:,0]
+    double dot = matrix_col_dot_product(A, 0, B, 0);
+    printf("A[:,0] · B[:,0] = %f\\n", dot);  // 1*7 + 2*8 + 3*9 = 50
+
+    // Dot product of A[:,1] and B[:,0]
+    dot = matrix_col_dot_product(A, 1, B, 0);
+    printf("A[:,1] · B[:,0] = %f\\n", dot);  // 4*7 + 5*8 + 6*9 = 122
+
+    matrix_free(A);
+    matrix_free(B);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Computes in O(n) time where n is the number of rows.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Can compute dot product between columns of the same matrix (A, col1, A, col2).
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Building block for computing covariance matrices.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixApplyCol({ color }: { color: string }) {
+  const implementation = `void matrix_apply_col(Matrix *X, const int col, double (*func)(double)) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return;
+    }
+    if (!func) {
+        CUSTOM_ERROR("Function pointer is NULL");
+        return;
+    }
+    if (col < 0 || col >= X->cols) {
+        INDEX_ERROR();
+        return;
+    }
+
+    const int stride = X->cols;
+    for (int i = 0; i < X->rows; i++) {
+        X->data[i * stride + col] = func(X->data[i * stride + col]);
+    }
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_apply_col
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>void <span style={{ color }}>matrix_apply_col</span>(Matrix *X, int col, double (*func)(double));</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Applies a <span style={{ color }}>function</span> to every element in a specific column.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> The function takes a double and returns a double. Modifies the column in-place.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Matrix to modify (in-place).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index (0-based).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>func</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">double (*)(double)</td>
+                <td className="px-4 py-3 text-white/70">Function pointer: takes double, returns double.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>void</span>. The column is modified in-place.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> No operation performed if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Matrix X is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Function pointer is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Column index is out of bounds</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_apply_col.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+#include <math.h>
+
+// Custom transformation function
+double square(double x) {
+    return x * x;
+}
+
+int main() {
+    Matrix *X = matrix_create(3, 2);
+    matrix_set(X, 0, 0, 1); matrix_set(X, 0, 1, 4);
+    matrix_set(X, 1, 0, 2); matrix_set(X, 1, 1, 5);
+    matrix_set(X, 2, 0, 3); matrix_set(X, 2, 1, 6);
+
+    printf("Before:\\n");
+    matrix_print(X);
+
+    // Apply square function to column 0
+    matrix_apply_col(X, 0, square);
+    printf("After squaring col 0:\\n");
+    matrix_print(X);
+    // [[1, 4], [4, 5], [9, 6]]
+
+    // Apply log to column 1 (using math.h)
+    matrix_apply_col(X, 1, log);
+    printf("After log on col 1:\\n");
+    matrix_print(X);
+
+    matrix_free(X);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Works with any function matching the <span style={{ color }}>double (*)(double)</span> signature.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Compatible with math.h functions: <span style={{ color }}>sqrt</span>, <span style={{ color }}>log</span>, <span style={{ color }}>exp</span>, <span style={{ color }}>sin</span>, etc.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for feature transformations (log, sqrt, normalization).
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function VectorToMatrix({ color }: { color: string }) {
+  const implementation = `Matrix *vector_to_matrix(const Vector *x) {
+    if (!x) {
+        NULL_VECTOR_ERROR();
+        return NULL;
+    }
+
+    Matrix *X = matrix_create(x->dim, 1);
+    if (!X) {
+        ALLOCATION_ERROR();
+        return NULL;
+    }
+
+    for (int i = 0; i < x->dim; i++) {
+        X->data[i] = x->data[i];
+    }
+
+    return X;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        vector_to_matrix
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>Matrix *<span style={{ color }}>vector_to_matrix</span>(const Vector *x);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Converts a <span style={{ color }}>Vector</span> to a <span style={{ color }}>column Matrix</span> (n × 1).
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Creates a new matrix with dimensions (vector.dim × 1).
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>x</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Vector*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the vector to convert.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns a new column matrix (n × 1) containing the vector elements.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>NULL</span> if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Vector x is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Memory allocation fails</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat vector_to_matrix.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+#include "vector.h"
+
+int main() {
+    // Create a vector [1, 2, 3]
+    Vector *v = vector_create(3);
+    vector_set(v, 0, 1);
+    vector_set(v, 1, 2);
+    vector_set(v, 2, 3);
+
+    // Convert to column matrix
+    Matrix *M = vector_to_matrix(v);
+
+    printf("Vector:\\n");
+    vector_print(v);  // [1, 2, 3]
+
+    printf("Matrix (3x1):\\n");
+    matrix_print(M);
+    // [[1]
+    //  [2]
+    //  [3]]
+
+    vector_free(v);
+    matrix_free(M);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Creates a <span style={{ color }}>column vector</span> (n × 1 matrix).
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for matrix multiplication with vectors.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> The original vector is not modified.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function MatrixToVector({ color }: { color: string }) {
+  const implementation = `Vector *matrix_to_vector(const Matrix *X, const int col, const int row_start, const int row_end) {
+    if (!X) {
+        NULL_MATRIX_ERROR();
+        return NULL;
+    }
+    if (col < 0 || col > X->cols) {
+        INDEX_ERROR();
+        return NULL;
+    }
+    if (row_start < 0 || row_end > X->rows || row_start > row_end) {
+        INDEX_ERROR();
+        return NULL;
+    }
+
+    Vector* x = vector_create(row_end - row_start);
+    if (!x) {
+        ALLOCATION_ERROR();
+        return NULL;
+    }
+
+    for (int i = 0; i < row_end - row_start; i++) {
+        x->data[i] = X->data[(row_start + i) * X->cols + col];
+    }
+
+    return x;
+}`
+
+  return (
+    <div>
+      <h1 className="font-mono text-h1" style={{ color }}>
+        matrix_to_vector
+      </h1>
+
+      <section className="mt-8">
+        <h2 className="font-mono text-h2 text-white/90">$ cat signature.h</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-default text-white/80">
+            <code>Vector *<span style={{ color }}>matrix_to_vector</span>(const Matrix *X, int col, int row_start, int row_end);</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat description.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Extracts a <span style={{ color }}>column slice</span> from a matrix and converts it to a Vector.
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Allows specifying a row range [row_start, row_end) to extract a subset.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat parameters.txt</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+          <table className="w-full font-mono text-default">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">PARAMETER</th>
+                <th className="border-r border-white px-4 py-3 text-left text-white/90">TYPE</th>
+                <th className="px-4 py-3 text-left text-white/90">DESCRIPTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>X</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">const Matrix*</td>
+                <td className="px-4 py-3 text-white/70">Pointer to the source matrix.</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>col</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Column index to extract (0-based).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>row_start</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Starting row index (inclusive, 0-based).</td>
+              </tr>
+              <tr className="border-b border-white">
+                <td className="border-r border-white px-4 py-3" style={{ color }}>row_end</td>
+                <td className="border-r border-white px-4 py-3 text-white/70">int</td>
+                <td className="px-4 py-3 text-white/70">Ending row index (exclusive).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat return.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <p className="font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns a new vector of length (row_end - row_start).
+          </p>
+          <p className="mt-4 font-mono text-default leading-relaxed text-white/70">
+            <span style={{ color }}>&gt;</span> Returns <span style={{ color }}>NULL</span> if:
+          </p>
+          <ul className="mt-2 space-y-2 pl-6 font-mono text-default text-white/70">
+            <li><span style={{ color }}>{'>'}</span> Matrix X is NULL</li>
+            <li><span style={{ color }}>{'>'}</span> Column index is out of bounds</li>
+            <li><span style={{ color }}>{'>'}</span> Row indices are invalid (out of bounds or start {'>'} end)</li>
+            <li><span style={{ color }}>{'>'}</span> Memory allocation fails</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat matrix_to_vector.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{implementation}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat example.c</h2>
+        <div className="mt-4 overflow-x-auto rounded border border-white bg-black/60 p-4">
+          <pre className="font-mono text-sm leading-relaxed text-white/80">
+            <code>{`#include "matrix.h"
+#include "vector.h"
+
+int main() {
+    Matrix *X = matrix_create(4, 3);
+    // Fill matrix with values 1-12
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 3; j++)
+            matrix_set(X, i, j, i * 3 + j + 1);
+
+    // X = [[1,  2,  3 ]
+    //      [4,  5,  6 ]
+    //      [7,  8,  9 ]
+    //      [10, 11, 12]]
+
+    // Extract entire column 1: [2, 5, 8, 11]
+    Vector *col1 = matrix_to_vector(X, 1, 0, 4);
+    printf("Column 1 (all rows):\\n");
+    vector_print(col1);  // [2, 5, 8, 11]
+
+    // Extract column 0, rows 1-3: [4, 7]
+    Vector *slice = matrix_to_vector(X, 0, 1, 3);
+    printf("Column 0, rows [1,3):\\n");
+    vector_print(slice);  // [4, 7]
+
+    matrix_free(X);
+    vector_free(col1);
+    vector_free(slice);
+    return 0;
+}`}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="font-mono text-h2 text-white/90">$ cat notes.txt</h2>
+        <div className="mt-4 rounded border border-white bg-black/40 p-6">
+          <ul className="space-y-3 font-mono text-default text-white/70">
+            <li>
+              <span style={{ color }}>{'>'}</span> Row range uses <span style={{ color }}>half-open interval</span> [row_start, row_end).
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> To extract entire column: use row_start=0, row_end=X-{'>'}rows.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> Useful for extracting target variable (y) from dataset matrix.
+            </li>
+            <li>
+              <span style={{ color }}>{'>'}</span> <span style={{ color }}>Note:</span> This function is in <span style={{ color }}>matrix.h</span> (not vector.h)
+              to avoid <span style={{ color }}>circular dependency</span> — matrix.h includes vector.h, so vector.h cannot include matrix.h.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  )
+}
+
 export function Matrix() {
   const { color } = useTheme()
   const location = useLocation()
@@ -3174,6 +5816,38 @@ export function Matrix() {
       return <MatrixSliceCols color={color} />
     case 'matrix_concat':
       return <MatrixConcat color={color} />
+    case 'matrix_arithmetic':
+      return <MatrixArithmetic color={color} />
+    case 'matrix_multiplication':
+      return <MatrixMultiplication color={color} />
+    case 'matrix_scalar_arithmetic':
+      return <MatrixScalarArithmetic color={color} />
+    case 'matrix_min':
+      return <MatrixMin color={color} />
+    case 'matrix_max':
+      return <MatrixMax color={color} />
+    case 'matrix_sum':
+      return <MatrixSum color={color} />
+    case 'matrix_mean':
+      return <MatrixMean color={color} />
+    case 'matrix_col_min':
+      return <MatrixColMin color={color} />
+    case 'matrix_col_max':
+      return <MatrixColMax color={color} />
+    case 'matrix_col_sum':
+      return <MatrixColSum color={color} />
+    case 'matrix_col_mean':
+      return <MatrixColMean color={color} />
+    case 'matrix_col_std':
+      return <MatrixColStd color={color} />
+    case 'matrix_col_dot_product':
+      return <MatrixColDotProduct color={color} />
+    case 'matrix_apply_col':
+      return <MatrixApplyCol color={color} />
+    case 'vector_to_matrix':
+      return <VectorToMatrix color={color} />
+    case 'matrix_to_vector':
+      return <MatrixToVector color={color} />
     default:
       return <MatrixOverview color={color} />
   }

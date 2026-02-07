@@ -138,16 +138,22 @@ export function Guide() {
     const parts = path.split('/')
 
     if (parts.length === 1) {
-      // Main section like "vector", "matrix", etc.
       const mainLink = guideLinks.find(l => l.path === `/guide/${parts[0]}`)
-      return mainLink ? mainLink.label : parts[0]
+      return (
+        <>
+          <span>guide</span>
+          <span style={{ color }}> {'>'} </span>
+          <span>{mainLink ? mainLink.label : parts[0]}</span>
+        </>
+      )
     } else if (parts.length === 2) {
-      // Sub-section like "vector/structure"
       const mainLink = guideLinks.find(l => l.path === `/guide/${parts[0]}`)
       if (mainLink) {
         const subLink = mainLink.subLinks.find(s => s.path === location.pathname)
         return (
           <>
+            <span>guide</span>
+            <span style={{ color }}> {'>'} </span>
             <span
               className="cursor-pointer transition-colors"
               onClick={() => navigate(mainLink.path)}

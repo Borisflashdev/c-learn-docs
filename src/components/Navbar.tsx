@@ -108,14 +108,10 @@ export function Navbar() {
                 onClick={() => {
                   setTheme(key as keyof typeof themes)
                 }}
-                className={`flex items-center gap-2 px-4 py-2 font-mono text-default cursor-pointer transition-colors
-                  ${theme === key ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
+                className={`flex items-center px-4 py-2 font-mono text-default cursor-pointer transition-colors
+                  ${theme === key ? 'bg-white/10' : 'hover:bg-white/5'}`}
               >
-                <span
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: value.color }}
-                />
-                <span>{value.name}</span>
+                <span style={{ color: value.color }}>{value.name}</span>
               </div>
             ))}
           </div>
@@ -131,7 +127,7 @@ export function Navbar() {
               key={link.id}
               onClick={() => handleNavigation(link)}
               className={`
-                relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer
+                group relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer
                 ${index === 0 ? 'border-l' : ''}
                 border-r
                 ${isActive ? 'bg-black text-white border-b-black' : 'bg-black text-white/50 hover:text-white border-b border-b-white'}
@@ -143,12 +139,6 @@ export function Navbar() {
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
                 </svg>
               )}
-              <span
-                className="ml-10 text-white/50 hover:text-white"
-                onClick={(e) => e.stopPropagation()}
-              >
-                ×
-              </span>
             </div>
           )
         })}
@@ -156,18 +146,12 @@ export function Navbar() {
         {/* More dropdown tab */}
         <div
           onClick={() => setIsMoreOpen(!isMoreOpen)}
-          className="relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer border-r bg-black text-white/50 hover:text-white border-b border-b-white"
+          className="group relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer border-r bg-black text-white/50 hover:text-white border-b border-b-white"
         >
           <span>More</span>
           <svg className="ml-1 h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M6 9l6 6 6-6" />
           </svg>
-          <span
-            className="ml-10 text-white/50 hover:text-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            ×
-          </span>
 
           {isMoreOpen && (
             <div className="absolute left-0 top-full mt-0 bg-black border border-white menu-slide min-w-[150px] z-50">
@@ -191,22 +175,12 @@ export function Navbar() {
         {/* Theme selector dropdown */}
         <div
           onClick={() => setIsThemeOpen(!isThemeOpen)}
-          className="relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer border-r bg-black text-white/50 hover:text-white border-b border-b-white"
+          className="group relative flex items-center px-4 py-2 font-mono text-default border-t border-white rounded-t-lg cursor-pointer border-r bg-black text-white/50 hover:text-white border-b border-b-white"
         >
-          <span
-            className="w-3 h-3 rounded-full mr-2"
-            style={{ backgroundColor: color }}
-          />
           <span>Theme</span>
           <svg className="ml-1 h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M6 9l6 6 6-6" />
           </svg>
-          <span
-            className="ml-10 text-white/50 hover:text-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            ×
-          </span>
 
           {isThemeOpen && (
             <div className="absolute left-0 top-full mt-0 bg-black border border-white menu-slide min-w-[150px] z-50">
@@ -218,14 +192,10 @@ export function Navbar() {
                     setTheme(key as keyof typeof themes)
                     setIsThemeOpen(false)
                   }}
-                  className={`flex items-center gap-2 px-4 py-2 font-mono text-default cursor-pointer transition-colors
-                    ${theme === key ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
+                  className={`flex items-center px-4 py-2 font-mono text-default cursor-pointer transition-colors
+                    ${theme === key ? 'bg-white/10' : 'hover:bg-white/5'}`}
                 >
-                  <span
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: value.color }}
-                  />
-                  <span>{value.name}</span>
+                  <span style={{ color: value.color }}>{value.name}</span>
                 </div>
               ))}
             </div>

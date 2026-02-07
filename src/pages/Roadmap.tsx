@@ -141,23 +141,46 @@ export function Roadmap() {
           </p>
         ) : (
           <>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm">
               {types.map((type) => (
                 <button
                   key={type}
                   onClick={() => setFilter(type)}
-                  className="cursor-pointer rounded border px-3 py-1 font-mono text-sm transition-colors"
-                  style={{
-                    borderColor: filter === type ? color : 'rgba(255,255,255,0.3)',
-                    backgroundColor: filter === type ? color + '20' : 'transparent',
-                    color: filter === type ? color : 'rgba(255,255,255,0.6)',
-                  }}
+                  className={`cursor-pointer transition-colors ${filter === type ? 'underline underline-offset-4' : ''}`}
+                  style={{ color: filter === type ? color : 'rgba(255,255,255,0.4)' }}
                 >
                   {type}
                 </button>
               ))}
             </div>
-            <div className="mt-4 overflow-x-auto rounded border border-white bg-black/40">
+            {/* Mobile: stacked cards */}
+            <div className="mt-4 space-y-2 md:hidden">
+              {filtered.map((commit, index) => (
+                <div
+                  key={index}
+                  className="rounded border border-white bg-black/40 px-4 py-3 font-mono text-default"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/60">{commit.date}</span>
+                    <span style={{ color }}>{commit.type}</span>
+                  </div>
+                  <span
+                    className="mt-2 inline-flex items-center cursor-pointer text-white/70 underline transition-colors"
+                    onMouseEnter={(e) => (e.currentTarget.style.color = color)}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+                    onClick={() => window.open(commit.url, '_blank', 'noopener,noreferrer')}
+                  >
+                    {commit.message}
+                    <svg className="ml-1.5 h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                    </svg>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: table */}
+            <div className="mt-4 hidden overflow-x-auto rounded border border-white bg-black/40 md:block">
               <table className="w-full table-fixed font-mono text-default">
                 <colgroup>
                   <col className="w-[130px]" />

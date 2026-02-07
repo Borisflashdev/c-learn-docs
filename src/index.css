@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 .text-h1 {
-  font-size: 37px;
+  font-size: 35px;
 }
 
 .text-h2 {
-  font-size: 22px;
+  font-size: 21px;
 }
 
 .text-default {
-  font-size: 17px;
+  font-size: 16px;
 }
 
 html {
+  font-size: 95%;
   background-color: #000000;
 }
 
@@ -44,3 +45,20 @@ body {
 .menu-slide {
   animation: slideDown 0.15s ease-out forwards;
 }
+
+@keyframes typeReveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.8;
+  }
+  100% {
+    clip-path: inset(0 0% 0 0);
+    opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: typeReveal 0.5s steps(12) forwards;
+}
+
+

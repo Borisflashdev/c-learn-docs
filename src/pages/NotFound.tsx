@@ -27,12 +27,12 @@ export function NotFound() {
             <span style={{ color }}>&gt;</span> Try navigating back to{' '}
             <Link
               to="/home"
-              className="underline transition-colors"
+              className="text-white underline transition-colors"
               style={{ color: isHovered ? color : undefined }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              /home
+              Home
             </Link>
           </p>
         </div>

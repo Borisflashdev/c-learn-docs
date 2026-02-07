@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
-import logoMain from '../assets/logo_main.png'
+import logoMain from '../../public/logo.png'
 
 const features = [
   {
